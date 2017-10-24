@@ -1,0 +1,30 @@
+iworkflow_ip: 1.1.1.1
+iworkflow_port: 443
+iworkflow_user: user
+iworkflow_password: password
+iworkflow_use_ssl: True
+tenant_name: tenant
+template_name: http_basic
+service_name: cfy-plugin-test-http-basic
+vars:
+  - name: "pool__addr"
+    value: "2.2.2.2"
+  - name: "pool__port"
+    value: "8080"
+tables:
+  - name: monitor__Monitors
+    columns:
+    - Name
+    rows:
+    - - "/Common/http"
+  - name: pool__Members
+    columns:
+    - IPAddress
+    - Port
+    rows:
+    - - 3.3.3.3
+      - '8080'
+properties:
+  - id: cloudConnectorReference
+    isRequired: false
+    value: https://localhost/mgmt/cm/cloud/connectors/local/connector-id

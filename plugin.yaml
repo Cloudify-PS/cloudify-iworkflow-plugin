@@ -1,0 +1,79 @@
+########
+# Copyright (c) 2017 GigaSpaces Technologies Ltd. All rights reserved
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+#    * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    * See the License for the specific language governing permissions and
+#    * limitations under the License.
+
+plugins:
+  iworkflow:
+    package_name: cloudify-iworkflow-plugin
+    package_version: '1.0'
+    executor: central_deployment_agent
+
+node_types:
+  cloudify.iworkflow.iWorkflow:
+    derived_from: cloudify.nodes.Root
+    properties:
+      ip:
+        type: string
+        description: >
+          iWorkflow ip
+      port:
+        type: string
+        description: >
+          iWorkflow port
+      user:
+        type: string
+        description: >
+          iWorkflow username
+      password:
+        type: string
+        description: >
+          iWorkflow password
+      use_ssl:
+        type: boolean
+        description: >
+          Specify if connection uses SSL
+
+  cloudify.iworkflow.Service:
+    derived_from: cloudify.nodes.Root
+    properties:
+      tenant_name:
+        type: string
+        description: >
+          Tenant name
+      template_name:
+        type: string
+        description: >
+          iWorkflow service template name
+      service_name:
+        type: string
+        description: >
+          iWorkflow service name to be deployed
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: iworkflow.iworkflow_plugin.service.create_service
+          inputs:
+            vars:
+              default: []
+            tables:
+              default: []
+            properties:
+              default: []
+            reference_hostname:
+              type: string
+            retry_interval:
+              type: integer
+              default: 10
+        delete:
+          implementation: iworkflow.iworkflow_plugin.service.delete_service
